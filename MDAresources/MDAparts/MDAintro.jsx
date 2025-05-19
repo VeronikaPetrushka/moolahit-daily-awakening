@@ -3,7 +3,7 @@ import { logo, imagePlacholder } from "../MDAconstants/MDAimages";
 import MDAintroinfo from "../MDAconstants/MDAintroinfo";
 import { intro } from "../MDAconstants/MDAstyles";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { launchImageLibrary } from "react-native-image-picker";
 
@@ -12,6 +12,25 @@ const MDAintro = () => {
     const [index, setIndex] = useState(0);
     const [userImage, setUserImage] = useState(null);
     const [nickname, setNickname] = useState(null);
+    const [user, setUser] = useState(false);
+
+    useEffect(() => {
+        const loadUser = async () => {
+            try {
+                const stored = await AsyncStorage.getItem('MDA_USER');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    setNickname(parsed.nickname);
+                    setUserImage(parsed.image);
+                    setUser(true);
+                }
+            } catch (e) {
+                console.warn('Failed to load user');
+            }
+        };
+
+        loadUser();
+    }, []);
 
     const loadUserImage = async () => {
         try {
@@ -49,7 +68,7 @@ const MDAintro = () => {
         <View style={intro.container}>
 
             {
-                index < 4 ? (
+                index < 4 && (
                     <>
                         <Image source={logo} style={intro.logoImage} />
 
@@ -63,12 +82,19 @@ const MDAintro = () => {
 
                         <TouchableOpacity
                             style={intro.button}
-                            onPress={() => setIndex((prev) => prev + 1)}
+                            onPress={() =>
+                                (user && index === 3) ?
+                                    navigation.navigate('MDAchallenge')
+                                    : setIndex((prev) => prev + 1)}
                         >
                             <Text style={intro.buttonText}>{MDAintroinfo[index].button}</Text>
                         </TouchableOpacity>
                     </>
-                ) : (
+                )
+            }
+            
+            {
+                (!user && index === 4) && (
                     <>
                             <TouchableOpacity
                                 style={intro.imageUploader}

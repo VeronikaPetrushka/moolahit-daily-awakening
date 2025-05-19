@@ -1,0 +1,1 @@
+export const share = require('../MDAassets/MDAicons/share.png');

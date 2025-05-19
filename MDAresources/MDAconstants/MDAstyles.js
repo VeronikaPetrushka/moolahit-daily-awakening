@@ -29,6 +29,7 @@ export const wrapper = StyleSheet.create({
 export const panel = StyleSheet.create({
 
     container: {
+        alignSelf: 'center',
         width: '85%',
         borderRadius: 500,
         borderWidth: 2,
@@ -48,8 +49,8 @@ export const panel = StyleSheet.create({
     },
 
     mdaBtn: {
-        width: width * '24%',
-        height: width * '24%',
+        width: 60,
+        height: 60,
         borderRadius: 200,
         alignItems: 'center',
         justifyContent: 'center'
@@ -142,5 +143,150 @@ export const intro = StyleSheet.create({
         fontWeight: '700',
         color: '#fff'
     }
+
+});
+
+//MDAchallange
+
+export const challenge = StyleSheet.create({
+
+    upperPanel: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#F5AA07',
+        borderBottomLeftRadius: 22,
+        borderBottomRightRadius: 22,
+        backgroundColor: '#B7721E',
+        paddingTop: height > 700 ? height * 0.08 : height * 0.05,
+        paddingHorizontal: 44,
+        paddingBottom: height * 0.03,
+        marginBottom: 16
+    },
+
+    user: {
+        fontSize: 26,
+        fontWeight: '700',
+        color: '#fff',
+        marginBottom: height * 0.04,
+        textAlign: 'center',
+        width: '100%',
+    },
+
+    row: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+
+    levelBox: {
+        borderRadius: 12,
+        width: 40,
+        height: 40,
+        backgroundColor: '#774200',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    levelText: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#fff',
+    },
+
+    levelTitle: {
+        fontSize: 14,
+        fontWeight: '400',
+        color: '#fff',
+        marginBottom: 7
+    },
+
+    dateBox: {
+        width: 140,
+        backgroundColor: '#B7721E',
+        borderRadius: 22,
+        borderWidth: 1,
+        borderColor: '#fff',
+        padding: 11,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 16
+    },
+
+    dateText: {
+        fontSize: 16,
+        fontWeight: '600',
+        lineHeight: 22,
+        color: '#fff',
+    },
+
+    taskContainer: {
+        backgroundColor: '#B7721E',
+        borderRadius: 22,
+        borderWidth: 1,
+        borderColor: '#fff',
+        paddingTop: 11,
+        paddingHorizontal: 60,
+        paddingBottom: height * 0.04,
+        marginBottom: 9,
+        alignItems: 'center'
+    },
+
+    decorImg: {
+        width: 42,
+        height: 42,
+        resizeMode: 'contain',
+        marginBottom: 7
+    },
+
+    taskTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        lineHeight: 22,
+        color: '#fff',
+        marginBottom: height * 0.025,
+    },
+
+    taskText: {
+        fontSize: 16,
+        fontWeight: '400',
+        lineHeight: 22,
+        color: '#fff',
+    },
+
+    shareButton: {
+        borderRadius: 100,
+        backgroundColor: '#F5AA07',
+        width: 61,
+        hight: 61,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    shareIcon: {
+        width: 20,
+        height: 22,
+        resizeMode: 'contain',
+    },
+
+    progressWrapper: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+
+    progressBarBackground: {
+        width: '100%',
+        height: 15,
+        borderRadius: 22,
+        backgroundColor: '#774200',
+        overflow: 'hidden',
+        padding: 1
+    },
+
+        progressBarFill: {
+        height: '100%',
+        backgroundColor: '#1FB2E3',
+        borderRadius: 22,
+    },
 
 })

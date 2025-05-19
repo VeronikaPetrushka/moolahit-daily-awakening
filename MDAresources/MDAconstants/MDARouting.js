@@ -16,6 +16,6 @@ export const MDAintroroute = () => {
 
 export const MDAchallengeroute = () => {
     return (
-        <MDAroutewrapper mda={<MDApartsimports.MDAchallenge />} />
+        <MDAroutewrapper mda={<MDApartsimports.MDAchallenge />} MDA />
     )
 };

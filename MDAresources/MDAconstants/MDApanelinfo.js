@@ -1,22 +1,22 @@
 const MDApanelinfo = [
     {
-        mdaRouteName: 'MDAchallengeroute',
-        mdaIconImg: require('../MDAassets/MDApanel/challenges.png'),
-    },
-    {
-        mdaRouteName: 'MDAlevelsroute',
-        mdaIconImg: require('../MDAassets/MDApanel/levels.png'),
-    },
-    {
-        mdaRouteName: 'MDAchallengeslogroute',
-        mdaIconImg: require('../MDAassets/MDApanel/challenges-log.png'),
-    },
-    {
-        mdaRouteName: 'MDAmyprofileroute',
+        mdaRouteName: 'MDAmyprofile',
         mdaIconImg: require('../MDAassets/MDApanel/my-profile.png'),
     },
     {
-        mdaRouteName: 'MDAdailyreflectionroute',
+        mdaRouteName: 'MDAchallengeslog',
+        mdaIconImg: require('../MDAassets/MDApanel/challenges-log.png'),
+    },
+        {
+        mdaRouteName: 'MDAchallenge',
+        mdaIconImg: require('../MDAassets/MDApanel/challenges.png'),
+    },
+        {
+        mdaRouteName: 'MDAlevels',
+        mdaIconImg: require('../MDAassets/MDApanel/levels.png'),
+    },
+    {
+        mdaRouteName: 'MDAdailyreflection',
         mdaIconImg: require('../MDAassets/MDApanel/daily-reflection.png'),
     }
 ];

@@ -251,20 +251,21 @@ export const challenge = StyleSheet.create({
         fontWeight: '400',
         lineHeight: 22,
         color: '#fff',
+        textAlign: 'center'
     },
 
     shareButton: {
         borderRadius: 100,
         backgroundColor: '#F5AA07',
         width: 61,
-        hight: 61,
+        height: 61,
         alignItems: 'center',
         justifyContent: 'center'
     },
 
     shareIcon: {
-        width: 20,
-        height: 22,
+        width: 27,
+        height: 27,
         resizeMode: 'contain',
     },
 
@@ -283,7 +284,7 @@ export const challenge = StyleSheet.create({
         padding: 1
     },
 
-        progressBarFill: {
+    progressBarFill: {
         height: '100%',
         backgroundColor: '#1FB2E3',
         borderRadius: 22,

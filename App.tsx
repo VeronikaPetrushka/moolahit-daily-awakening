@@ -7,6 +7,7 @@ type RootStackParamList = {
   MDAsplash: undefined;
   MDAintro: undefined;
   MDAchallenge: undefined;
+  MDAchallengeslog: undefined;
 };
 
 enableScreens();
@@ -34,6 +35,10 @@ const App = () => {
               <Stack.Screen 
                     name="MDAchallenge" 
                     component={MDArouteimports.MDAchallengeroute} 
+              />
+              <Stack.Screen 
+                    name="MDAchallengeslog" 
+                    component={MDArouteimports.MDAchallengeslogroute} 
               />
           </Stack.Navigator>
       </NavigationContainer>

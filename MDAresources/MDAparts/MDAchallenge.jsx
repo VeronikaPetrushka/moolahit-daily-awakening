@@ -1,4 +1,4 @@
-import { View, Image, Text, TouchableOpacity, Alert } from "react-native"
+import { View, Image, Text, TouchableOpacity, Alert, Share } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import challengeinfo from "../MDAconstants/MDAchallengeinfo";
 import { challenge, intro } from "../MDAconstants/MDAstyles";
@@ -45,7 +45,7 @@ const MDAchallenge = () => {
             setChallengeState(JSON.parse(stored));
             }
         } catch (e) {
-            Alert.alert('Error',  'Failed to load challenge state');
+            Alert.alert('Error', 'Failed to load challenge state');
         }
     };
 
@@ -54,7 +54,7 @@ const MDAchallenge = () => {
             await AsyncStorage.setItem('MDA_CHALLENGE_STATE', JSON.stringify(newState));
             setChallengeState(newState);
         } catch (e) {
-            Alert.alert('Error',  'Failed to save challenge state');
+            Alert.alert('Error', 'Failed to save challenge state');
         }
     };
 
@@ -62,10 +62,16 @@ const MDAchallenge = () => {
         loadChallengeState();
     }, []);
 
-    const markTaskAsCompleted = (level, index) => {
+    const markTaskAsCompleted = async (level, index) => {
+        const now = new Date();
+        const completionDate = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+
         const updated = {
             ...challengeState,
-            completedTasks: [...challengeState.completedTasks, { level, index }]
+            completedTasks: [
+                ...challengeState.completedTasks,
+                { level, index, date: completionDate }
+            ]
         };
 
         const totalTasks = challengeinfo.find(l => l.level === level)?.tasks.length || 0;
@@ -75,7 +81,21 @@ const MDAchallenge = () => {
             updated.currentLevel = level + 1;
         }
 
-        saveChallengeState(updated);
+        await saveChallengeState(updated);
+
+        try {
+            const allTasks = challengeinfo.find(l => l.level === level)?.tasks || [];
+            const taskText = allTasks[index];
+
+            const storedLog = await AsyncStorage.getItem('MDA_COMPLETED_LOG');
+            const parsedLog = storedLog ? JSON.parse(storedLog) : [];
+
+            const newEntry = { level, index, date: completionDate, task: taskText };
+
+            await AsyncStorage.setItem('MDA_COMPLETED_LOG', JSON.stringify([...parsedLog, newEntry]));
+        } catch (e) {
+            Alert.alert('Error', 'Failed to log completed task');
+        }
     };
 
     const loadDailyLock = async () => {
@@ -150,6 +170,23 @@ const MDAchallenge = () => {
 
     const taskIndex = getNextTaskIndex();
 
+    const shareCurrentLevelText = () => {
+        const task = currentLevel?.tasks[taskIndex] || '';
+        return `I'm working on "${currentLevel?.title}" and today's challenge is: "${task}". #MDAChallenge`;
+    };
+
+    //clear 24h timer
+    
+    // const clearDailyLock = async () => {
+    //     try {
+    //         await AsyncStorage.removeItem('MDA_CHALLENGE_LOCK');
+    //         setDailyLockedUntil(null);
+    //         Alert.alert('Timer Reset', 'The 24h lock has been cleared.');
+    //     } catch (e) {
+    //         Alert.alert('Error', 'Failed to clear the 24h timer.');
+    //     }
+    // };
+
     return (
         <View style={{flex: 1}}>
 
@@ -181,17 +218,27 @@ const MDAchallenge = () => {
 
                 <View style={challenge.taskContainer}>
                     <Image source={done} style={challenge.decorImg} />
-                    <Text style={challenge.taskTitle}>Your challenge today is:</Text>
-                    <Text style={challenge.taskText}>{currentLevel.tasks[taskIndex]}</Text>
+                    {dailyLockedUntil && dailyLockedUntil > Date.now() ? (
+                        <Text style={challenge.taskText}>Come back tomorrow for the next challenge!</Text>
+                    ) : (
+                        <>
+                            <Text style={challenge.taskTitle}>Your challenge today is:</Text>
+                            <Text style={challenge.taskText}>{currentLevel.tasks[taskIndex]}</Text>
+                        </>
+                    )}
                 </View>
 
-                <View style={challenge.row}>                
+                <View style={[
+                    challenge.row,
+                    { marginTop: 20 },
+                    (dailyLockedUntil && dailyLockedUntil > Date.now()) && { flexWrap: 'wrap', justifyContent: 'center' }
+                ]}>                
                     {dailyLockedUntil && dailyLockedUntil > Date.now() ? (
-                        <TouchableOpacity style={[intro.button, { backgroundColor: '#1FB2E3' }]} disabled>
+                        <TouchableOpacity style={[intro.button, { backgroundColor: '#1FB2E3', marginTop: 0 }]} disabled>
                             <Text style={intro.buttonText}>To the next challenge: {getTimeUntilUnlock()}</Text>
                         </TouchableOpacity>
                     ) : timerActive ? (
-                        <TouchableOpacity style={intro.button} disabled>
+                        <TouchableOpacity style={[intro.button, {width: '75%', marginTop: 0}]} disabled>
                             <Text style={intro.buttonText}>
                                 Time left:  
                                 {` ${Math.floor(timeLeft / 60)
@@ -200,19 +247,33 @@ const MDAchallenge = () => {
                             </Text>
                         </TouchableOpacity>
                     ) : timeLeft === 0 ? (
-                        <TouchableOpacity style={[intro.button, { backgroundColor: '#1FB2E3' }]} disabled>
+                        <TouchableOpacity style={[intro.button, { backgroundColor: '#1FB2E3', width: '75%', marginTop: 0 }]} disabled>
                             <Text style={intro.buttonText}>Done</Text>
                         </TouchableOpacity>
                     ) : (
-                        <TouchableOpacity style={intro.button} onPress={startChallengeTimer}>
+                        <TouchableOpacity style={[intro.button, {width: '75%', marginTop: 0}]} onPress={startChallengeTimer}>
                             <Text style={intro.buttonText}>Start the challenge</Text>
                         </TouchableOpacity>
                     )}
 
-                    <TouchableOpacity style={challenge.shareButton}>
+                    <TouchableOpacity
+                        style={[
+                            challenge.shareButton,
+                            (dailyLockedUntil && dailyLockedUntil > Date.now()) && { marginTop: 30 }
+                        ]}
+                        onPress={() => Share.share({ message: shareCurrentLevelText() })}
+                    >
                         <Image source={share} style={challenge.shareIcon} />
                     </TouchableOpacity>
+
                 </View>
+
+                {/* <TouchableOpacity
+                    style={[intro.button, { backgroundColor: '#f04e29', marginTop: 16, width: '75%' }]}
+                    onPress={clearDailyLock}
+                    >
+                    <Text style={intro.buttonText}>Reset 24h Timer</Text>
+                </TouchableOpacity> */}
 
             </View>
             

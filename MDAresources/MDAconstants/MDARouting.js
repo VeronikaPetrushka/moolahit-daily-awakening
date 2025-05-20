@@ -19,3 +19,9 @@ export const MDAchallengeroute = () => {
         <MDAroutewrapper mda={<MDApartsimports.MDAchallenge />} MDA />
     )
 };
+
+export const MDAchallengeslogroute = () => {
+    return (
+        <MDAroutewrapper mda={<MDApartsimports.MDAchallengeslog />} MDA />
+    )
+};

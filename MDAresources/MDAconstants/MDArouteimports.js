@@ -1,10 +1,11 @@
-import { MDAsplashroute, MDAintroroute, MDAchallengeroute, MDAchallengeslogroute } from "./MDARouting";
+import { MDAsplashroute, MDAintroroute, MDAchallengeroute, MDAchallengeslogroute, MDAlevelsroute } from "./MDARouting";
 
 const MDArouteimports = {
     MDAsplashroute,
     MDAintroroute,
     MDAchallengeroute,
-    MDAchallengeslogroute
+    MDAchallengeslogroute,
+    MDAlevelsroute
 };
 
 export default MDArouteimports;

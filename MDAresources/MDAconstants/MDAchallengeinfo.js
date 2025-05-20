@@ -6,7 +6,8 @@ const challengeinfo = [
             "Sit in silence for 3 minutes before touching your phone.",
             "No music. Listen to the world for 10 minutes.",
             "Write one sentence about yourself — and believe it.",
-        ]
+        ],
+        levelLimit: 3
     },
     {
         level: 2,
@@ -15,7 +16,8 @@ const challengeinfo = [
             "Walk a different route. No map. No goal.",
             "Don’t comment on anyone’s appearance today.",
             "Smile at a stranger — first.",
-        ]
+        ],
+        levelLimit: 6
     },
     {
         level: 3,
@@ -25,7 +27,8 @@ const challengeinfo = [
             "Drink everything slowly. Taste it.",
             "Ask yourself: “Why do I avoid silence?”",
             "Speak less. Listen more.",
-        ]
+        ],
+        levelLimit: 10
     },
     {
         level: 4,
@@ -36,7 +39,8 @@ const challengeinfo = [
             "Say “thank you” 5 times — with meaning.",
             "Sit for 15 minutes. No phone. Just presence.",
             "Write down 3 thoughts you usually ignore.",
-        ]
+        ],
+        levelLimit: 15
     },
     {
         level: 5,
@@ -47,7 +51,8 @@ const challengeinfo = [
             "Send a message you’ve been holding back.",
             "Don’t say “yes” or “no” today. Say more.",
             "Hold eye contact for 5 seconds. Really look.",
-        ]
+        ],
+        levelLimit: 20
     },
     {
         level: 6,
@@ -58,7 +63,8 @@ const challengeinfo = [
             "No complaints. Not even in your mind.",
             "Hug someone with presence. Or hug yourself.",
             "Read one sentence aloud. Feel it.",
-        ]
+        ],
+        levelLimit: 25
     },
     {
         level: 7,
@@ -69,7 +75,8 @@ const challengeinfo = [
             "Do one kind thing anonymously. Then forget it.",
             "Avoid mirrors today. Be in your body.",
             "Tell yourself: “I don’t want to be perfect. I want to be alive.”"
-        ]
+        ],
+        levelLimit: 30
     }
 ];
 

@@ -31,3 +31,15 @@ export const MDAlevelsroute = () => {
         <MDAroutewrapper mda={<MDApartsimports.MDAlevels />} MDA />
     )
 };
+
+export const MDAmyprofileroute = () => {
+    return (
+        <MDAroutewrapper mda={<MDApartsimports.MDAmyprofile />} MDA />
+    )
+};
+
+export const MDAdailyreflectionroute = () => {
+    return (
+        <MDAroutewrapper mda={<MDApartsimports.MDAdailyreflection />} MDA />
+    )
+};

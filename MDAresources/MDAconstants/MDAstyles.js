@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import wallpapers from "./MDAwallpapers";
 
 const { height, width } = Dimensions.get('window');
 
@@ -289,5 +290,39 @@ export const challenge = StyleSheet.create({
         backgroundColor: '#1FB2E3',
         borderRadius: 22,
     },
+
+    modalBack: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)'
+    },
+
+    wallpaper: {
+        width: '100%',
+        height: height * 0.36,
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: '#fff',
+        resizeMode: 'cover'
+    },
+
+    wallpaperSave: {
+        width: 54,
+        height: 54,
+        borderRadius: 22,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        alignSelf: 'center',
+        top: 10
+    },
+
+    wallpaperSaveIcon: {
+        width: 20,
+        height: 20,
+        resizeMode: 'contain'
+    }
 
 })

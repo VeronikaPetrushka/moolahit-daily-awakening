@@ -68,7 +68,7 @@ const MDAchallengeslog = () => {
                                 ))
                             }
 
-                            <View style={{height: 200}} />
+                            <View style={{height: 400}} />
                         </ScrollView>
                     ) : (
                         <View style={challenge.taskContainer}>

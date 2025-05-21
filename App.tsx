@@ -9,6 +9,8 @@ type RootStackParamList = {
   MDAchallenge: undefined;
   MDAchallengeslog: undefined;
   MDAlevels: undefined;
+  MDAmyprofile: undefined;
+  MDAdailyreflection: undefined;
 };
 
 enableScreens();
@@ -44,6 +46,14 @@ const App = () => {
               <Stack.Screen 
                     name="MDAlevels" 
                     component={MDArouteimports.MDAlevelsroute} 
+              />
+              <Stack.Screen 
+                    name="MDAmyprofile" 
+                    component={MDArouteimports.MDAmyprofileroute} 
+              />
+              <Stack.Screen 
+                    name="MDAdailyreflection" 
+                    component={MDArouteimports.MDAdailyreflectionroute} 
               />
           </Stack.Navigator>
       </NavigationContainer>

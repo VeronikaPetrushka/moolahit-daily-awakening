@@ -1,14 +1,15 @@
-import { View, Image, Text, TouchableOpacity, Alert, Share } from "react-native"
-import { useNavigation } from "@react-navigation/native";
+import { View, Image, Text, TouchableOpacity, Alert, Share, Modal } from "react-native"
 import challengeinfo from "../MDAconstants/MDAchallengeinfo";
+import wallpapers from "../MDAconstants/MDAwallpapers";
 import { challenge, intro } from "../MDAconstants/MDAstyles";
 import { done } from "../MDAconstants/MDAimages";
-import { share } from "../MDAconstants/MDAicons";
+import { share, save } from "../MDAconstants/MDAicons";
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CameraRoll from '@react-native-community/cameraroll';
+import RNFS from 'react-native-fs'
 
 const MDAchallenge = () => {
-    const navigation = useNavigation();
     const [user, setUser] = useState({ nickname: null, userImage: null });
     const [challengeState, setChallengeState] = useState({
         currentLevel: 1,
@@ -21,6 +22,10 @@ const MDAchallenge = () => {
     const currentLevel = challengeinfo.find(l => l.level === challengeState.currentLevel);
     const completedTasks = challengeState.completedTasks.filter(t => t.level === currentLevel?.level) || [];
     const totalTasks = currentLevel?.tasks.length || 0;
+
+    const [showWallpaperModal, setShowWallpaperModal] = useState(false);
+    const [selectedWallpaper, setSelectedWallpaper] = useState(null);
+    const [usedWallpapers, setUsedWallpapers] = useState([]);
 
     useEffect(() => {
         const loadUser = async () => {
@@ -48,6 +53,16 @@ const MDAchallenge = () => {
             Alert.alert('Error', 'Failed to load challenge state');
         }
     };
+
+    useEffect(() => {
+        const loadUsedWallpapers = async () => {
+            const stored = await AsyncStorage.getItem('MDA_USED_WALLPAPERS');
+            if (stored) {
+                setUsedWallpapers(JSON.parse(stored));
+            }
+        };
+        loadUsedWallpapers();
+    }, []);
 
     const saveChallengeState = async (newState) => {
         try {
@@ -146,12 +161,27 @@ const MDAchallenge = () => {
 
     const startChallengeTimer = () => {
         setTimerActive(true);
-        setTimeLeft(600);
+        setTimeLeft(600); // change to 5 for testing
     };
 
     const onChallengeComplete = async () => {
         await lockChallengeFor24h();
-        markTaskAsCompleted(challengeState.currentLevel, getNextTaskIndex());
+        const totalTasksThisLevel = challengeinfo.find(l => l.level === challengeState.currentLevel)?.tasks.length || 0;
+
+        if (challengeState.completedTasks.filter(t => t.level === challengeState.currentLevel).length + 1 >= totalTasksThisLevel) {
+            const available = wallpapers.filter((_, index) => !usedWallpapers.includes(index));
+            if (available.length > 0) {
+                const randIndex = Math.floor(Math.random() * available.length);
+                const newWallpaperIndex = wallpapers.indexOf(available[randIndex]);
+                setSelectedWallpaper(newWallpaperIndex);
+                setShowWallpaperModal(true);
+
+                const updated = [...usedWallpapers, newWallpaperIndex];
+                await AsyncStorage.setItem('MDA_USED_WALLPAPERS', JSON.stringify(updated));
+                setUsedWallpapers(updated);
+            }
+        }
+        markTaskAsCompleted(challengeState.currentLevel, taskIndex);
     };
 
 
@@ -172,20 +202,73 @@ const MDAchallenge = () => {
 
     const shareCurrentLevelText = () => {
         const task = currentLevel?.tasks[taskIndex] || '';
-        return `I'm working on "${currentLevel?.title}" and today's challenge is: "${task}". #MDAChallenge`;
+        return `I'm working on "${currentLevel?.title}" and today's challenge is: "${task}"`;
     };
 
+    const saveWallpaperToPhone = async () => {
+        if (selectedWallpaper === null) return;
+
+        try {
+            const asset = wallpapers[selectedWallpaper];
+            const resolved = Image.resolveAssetSource(asset);
+
+            console.log('Saving asset:', resolved);
+
+            // Fetch the image data
+            const response = await fetch(resolved.uri);
+            const blob = await response.blob();
+
+            // Convert to base64
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                try {
+                    const base64data = reader.result.split(',')[1]; // remove "data:image/png;base64,"
+                    const localPath = `${RNFS.CachesDirectoryPath}/wallpaper_${selectedWallpaper}.png`;
+
+                    // Write to temporary local file
+                    await RNFS.writeFile(localPath, base64data, 'base64');
+
+                    // Save to gallery
+                    await CameraRoll.save(localPath, { type: 'photo' });
+
+                    // Update used wallpapers
+                    const updated = [...usedWallpapers, selectedWallpaper];
+                    setUsedWallpapers(updated);
+
+                    Alert.alert('Success', 'Wallpaper saved to Photos.');
+                    setShowWallpaperModal(false);
+                } catch (err) {
+                    console.error('Save error:', err);
+                    Alert.alert('Need more info', 'Failed to save wallpaper.');
+                }
+            };
+
+            reader.onerror = (e) => {
+                console.error('FileReader error:', e);
+                Alert.alert('Need more info', 'Failed to process image.');
+            };
+
+            reader.readAsDataURL(blob);
+        } catch (e) {
+            console.error('Fetch error:', e);
+            Alert.alert('Error', 'Failed to fetch wallpaper asset.');
+        }
+    };
+    
     //clear 24h timer
     
-    // const clearDailyLock = async () => {
-    //     try {
-    //         await AsyncStorage.removeItem('MDA_CHALLENGE_LOCK');
-    //         setDailyLockedUntil(null);
-    //         Alert.alert('Timer Reset', 'The 24h lock has been cleared.');
-    //     } catch (e) {
-    //         Alert.alert('Error', 'Failed to clear the 24h timer.');
-    //     }
-    // };
+    const clearDailyLock = async () => {
+        try {
+            await AsyncStorage.removeItem('MDA_CHALLENGE_LOCK');
+            // await AsyncStorage.removeItem('MDA_COMPLETED_LOG');
+            // await AsyncStorage.removeItem('MDA_CHALLENGE_STATE');
+            // await AsyncStorage.removeItem('MDA_USED_WALLPAPERS');
+            setDailyLockedUntil(null);
+            Alert.alert('Timer Reset', 'The 24h lock has been cleared.');
+        } catch (e) {
+            Alert.alert('Error', 'Failed to clear the 24h timer.');
+        }
+    };
 
     return (
         <View style={{flex: 1}}>
@@ -274,6 +357,48 @@ const MDAchallenge = () => {
                     >
                     <Text style={intro.buttonText}>Reset 24h Timer</Text>
                 </TouchableOpacity> */}
+
+                <Modal
+                    visible={showWallpaperModal}
+                    transparent
+                    animationType="fade"
+                >
+                    <View style={challenge.modalBack}>
+                        <View style={[challenge.taskContainer, {width: '85%', paddingHorizontal: 31, paddingVertical: 27}]}>
+
+                            <View style={[challenge.levelBox, {marginBottom: 20}]}>
+                                <Text style={challenge.levelText}>{currentLevel.level}</Text>
+                            </View>
+
+                            <View style={[challenge.progressBarBackground, {marginBottom: 13}]}>
+                                <View
+                                style={[
+                                    challenge.progressBarFill,
+                                    { width: `${(completedTasks.length / totalTasks) * 100}%` },
+                                ]}
+                                />
+                            </View>
+                            
+                            <Text style={[challenge.taskTitle, { marginBottom: 8 }]}>{currentLevel.title}</Text>
+                            
+                            <Text style={[challenge.taskText, {marginBottom: 19}]}>Your gift:</Text>
+                                
+                            <View style={{width: '100%'}}>
+                                {selectedWallpaper !== null && (
+                                    <Image
+                                        source={wallpapers[selectedWallpaper]}
+                                        style={challenge.wallpaper}
+                                    />
+                                )}
+
+                                <TouchableOpacity onPress={saveWallpaperToPhone} style={challenge.wallpaperSave}>
+                                    <Image source={save} style={challenge.wallpaperSaveIcon} />
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </View>
+                </Modal>
 
             </View>
             

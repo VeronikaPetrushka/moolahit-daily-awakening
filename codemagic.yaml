@@ -10,7 +10,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.moolahit.daily.awakening.2025
       vars:
-        APP_STORE_APPLE_ID: 6746097025
+        APP_STORE_APPLE_ID: 6746097025 #
         BUNDLE_ID: 'com.moolahit.daily.awakening.2025'
         XCODE_WORKSPACE: 'MoolahitDailyAwakening.xcworkspace'
         XCODE_SCHEME: 'MoolahitDailyAwakening'

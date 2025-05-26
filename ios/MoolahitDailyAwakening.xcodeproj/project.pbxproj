@@ -259,7 +259,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MoolahitDailyAwakening/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Moolahit Daily Awakening";
@@ -289,7 +289,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				INFOPLIST_FILE = MoolahitDailyAwakening/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Moolahit Daily Awakening";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";

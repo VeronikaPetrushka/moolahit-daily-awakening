@@ -6,7 +6,7 @@ import { done } from "../MDAconstants/MDAimages";
 import { share, save } from "../MDAconstants/MDAicons";
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CameraRoll from '@react-native-community/cameraroll';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import RNFS from 'react-native-fs'
 
 const MDAchallenge = () => {

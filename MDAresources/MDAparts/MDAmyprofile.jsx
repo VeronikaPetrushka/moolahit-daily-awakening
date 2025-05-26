@@ -7,7 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { launchImageLibrary } from "react-native-image-picker";
 import { useFocusEffect } from "@react-navigation/native";
-import CameraRoll from '@react-native-community/cameraroll';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import RNFS from 'react-native-fs'
 
 const MDAmyprofile = () => {
@@ -112,7 +112,6 @@ const MDAmyprofile = () => {
                     setUsedWallpapers(updated);
 
                     Alert.alert('Success', 'Wallpaper saved to Photos.');
-                    setShowWallpaperModal(false);
                 } catch (err) {
                     console.error('Save error:', err);
                     Alert.alert('Error', 'Failed to save wallpaper.');
